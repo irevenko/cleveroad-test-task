@@ -1,5 +1,11 @@
 const { verify } = require('jsonwebtoken');
+const Joi = require('joi');
 const itemService = require('./item.service');
+
+const itemScheme = Joi.object({
+  title: Joi.string().trim().required().min(3),
+  price: Joi.number().required().precision(2).greater(0),
+});
 
 const itemController = {
   createItem: (req, res) => {
@@ -8,17 +14,15 @@ const itemController = {
     verify(req.token, process.env.JWT_SECRET_KEY, (err, authorizedData) => {
       const userId = authorizedData && authorizedData.result.id_user;
       const userInfo = authorizedData && authorizedData.result;
+      const validItem = itemScheme.validate(body);
 
       if (err) {
         res.sendStatus(401);
         return;
       }
-      if (!body.title) {
-        res.status(422).json({ field: 'title', message: 'Title is required' });
-        return;
-      }
-      if (!body.price) {
-        res.status(422).json({ field: 'price', message: 'Price is required' });
+
+      if (validItem.error) {
+        res.status(422).send(validItem.error.details[0]);
         return;
       }
 
@@ -41,21 +45,15 @@ const itemController = {
 
     verify(req.token, process.env.JWT_SECRET_KEY, (err, authorizedData) => {
       const userInfo = authorizedData && authorizedData.result;
+      const validItem = itemScheme.validate(body);
 
       if (err) {
         res.sendStatus(401);
         return;
       }
-      if (!body.title) {
-        res.status(422).json({ field: 'title', message: 'Title is required' });
-        return;
-      }
-      if (!body.price) {
-        res.status(422).json({ field: 'price', message: 'Price is required' });
-        return;
-      }
-      if (body.title.length < 3) {
-        res.status(422).json({ field: 'title', message: 'Title should contain at least 3 characters' });
+
+      if (validItem.error) {
+        res.status(422).send(validItem.error.details[0]);
         return;
       }
 
@@ -98,7 +96,7 @@ const itemController = {
       });
     });
   },
-  updateItemImage: async (req, res) => {
+  updateItemImage: (req, res) => {
     const { id } = req.params;
     const image = req.file.originalname;
     const imageSize = req.file.size;

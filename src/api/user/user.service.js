@@ -1,4 +1,4 @@
-const pool = require('../../db');
+const pool = require('../../helpers/db');
 
 const userService = {
   createUser: (data, callback) => {

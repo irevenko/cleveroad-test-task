@@ -1,28 +1,29 @@
 const { genSaltSync, hashSync, compareSync } = require('bcrypt');
 const { sign, verify } = require('jsonwebtoken');
+const Joi = require('joi');
 const userService = require('./user.service');
+
+const userRegistrationScheme = Joi.object({
+  name: Joi.string().trim().required().min(3),
+  email: Joi.string().trim().required().email(),
+  password: Joi.string().trim().required().min(8),
+  phone_number: Joi.string().trim().min(5),
+});
 
 const userController = {
   register: (req, res) => {
     const { body } = req;
     const salt = genSaltSync(10);
+    const validBody = userRegistrationScheme.validate(body);
 
-    if (!body.password || body.password.length < 8) {
-      res.status(422).json({ field: 'password', message: 'Password length must be at least 8 characters' });
-      return;
-    }
-    if (!body.email || !body.email.includes('@')) {
-      res.status(422).json({ field: 'email', message: 'E-mail must have @' });
-      return;
-    }
-    if (!body.name || body.name.length < 3) {
-      res.status(422).json({ field: 'name', message: 'Name length must be at least 3 characters' });
+    if (validBody.error) {
+      res.status(422).send(validBody.error.details[0]);
       return;
     }
 
-    body.password = hashSync(body.password, salt);
+    validBody.value.password = hashSync(validBody.value.password, salt);
 
-    userService.createUser(body, (err) => {
+    userService.createUser(validBody.value, (err) => {
       if (err) {
         if (err.sqlMessage.includes('email')) {
           res.status(422).json({ field: 'email', message: 'Such email is already occupied' });

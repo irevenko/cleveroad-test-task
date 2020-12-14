@@ -1,5 +1,5 @@
 const dayjs = require('dayjs');
-const pool = require('../../db');
+const pool = require('../../helpers/db');
 
 const itemService = {
   createItem: (data, userId, callback) => {
