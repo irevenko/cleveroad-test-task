@@ -1,4 +1,15 @@
-# Notes
+# Tech Task 🧾
+Using Node.js, develop a RESTful API that allows you to work with products.
+The user registers and gets the opportunity to place an advertisement for the sale of goods, like at OLX (eBay or craigslist) <br>
+Main functionality:
+- Registration
+- Authorization
+- Getting data of the current user
+- Creation / deletion of goods by an authorized user
+- Changing product data by an authorized user
+- Loading product image
+
+# Realization Notes 📜
 <b>api</b> - is built using express as main library and mysql as DB <br>
 <b>auth</b> - is made using JWT <br>
 <b>tests</b> - are done with mocha + chai and supertest <br>
@@ -11,12 +22,12 @@
 - <b>dotenv</b> - for enviroment variables
 - <b>eslint</b> - for code style and linting (AirBNB style)
 
-# API cons
-- No async/await
+# API cons 🆘
+- Written using callbacks
 - Small test coverage
 - Image upload works unstable with russian file names
 
-# Questions
+# Questions ❓
 - Middleware
 - Error handling
 - Project structure
@@ -25,4 +36,3 @@
 - General API best practices
 - Cleveroad's Node frameworks
 - Is there TypeScript on Backend
-- Wanna do Agriculture or Healthcare projects
