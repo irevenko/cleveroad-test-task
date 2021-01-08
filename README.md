@@ -25,14 +25,5 @@ Main functionality:
 # API cons 🆘
 - Written using callbacks
 - Small test coverage
-- Image upload works unstable with russian file names
-
-# Questions ❓
-- Middleware
-- Error handling
-- Project structure
-- Logging
-- Registered 201 not 200 Item Created 201 not 200
-- General API best practices
-- Cleveroad's Node frameworks
-- Is there TypeScript on Backend
+- No migrations
+- Should've use ORM instead of mysql driver
